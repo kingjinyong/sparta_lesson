@@ -1,6 +1,6 @@
-package com.example.sparta.lesson.domain.category;
+package com.example.sparta.lesson.domain.product.entity;
 
-import com.example.sparta.lesson.domain.product.Product;
+import com.example.sparta.lesson.domain.category.entity.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,9 +11,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,22 +24,28 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(name = "products")
+public class Product {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @JoinColumn(name = "category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
+
     @Column(nullable = false)
     private String name;
 
-    @JoinColumn(name="parent_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category parent;
+    @Column(nullable = false)
+    private BigDecimal price;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> products = new ArrayList<>();
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductOption> options = new ArrayList<>();
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -47,8 +55,19 @@ public class Category {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    public void addProduct(Product product){
-        this.products.add(product);
-        product.assignToCategory(this);
+    @Builder
+    public Product(String name, BigDecimal price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
+
+    public void addOption(ProductOption option) {
+        this.options.add(option);
+        option.assignToProduct(this);
+    }
+
+    public void assignToCategory(Category category) {
+        this.category = category;
     }
 }
