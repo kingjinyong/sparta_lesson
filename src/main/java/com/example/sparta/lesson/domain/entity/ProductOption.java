@@ -35,7 +35,10 @@ public class ProductOption {
     private String name;
 
     @Column(nullable = false)
-    private BigDecimal price;
+    private String value;
+
+    @Column(nullable = false)
+    private BigDecimal extraPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
