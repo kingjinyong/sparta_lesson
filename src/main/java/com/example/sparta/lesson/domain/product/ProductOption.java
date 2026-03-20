@@ -1,4 +1,5 @@
-package com.example.sparta.lesson.domain.entity;
+package com.example.sparta.lesson.domain.product;
+import com.example.sparta.lesson.global.constants.enums.ProductStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
