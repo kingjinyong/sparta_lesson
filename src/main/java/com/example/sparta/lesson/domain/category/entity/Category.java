@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,6 +32,8 @@ public class Category {
 
     @Column(nullable = false)
     private String name;
+
+    private String description;
 
     @JoinColumn(name="parent_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,5 +53,14 @@ public class Category {
     public void addProduct(Product product){
         this.products.add(product);
         product.assignToCategory(this);
+    }
+
+    @Builder
+    public Category(String name, String description, Category parent){
+        this.name = name;
+        this.description = description;
+        this.parent = null;
+
+
     }
 }
